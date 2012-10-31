@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+    "http://struts.apache.org/dtds/struts-2.0.dtd">
+
+<struts>
+
+	<constant name="struts.devMode" value="true" />
+
+	<!-- Configuration for the default package. -->
+	<package name="default" extends="struts-default">
+
+		<result-types>
+			<result-type name="json" class="org.apache.struts2.json.JSONResult" />
+		</result-types>
+
+		<interceptors>
+			<interceptor name="loginInterceptor" class="com.edu.sse.interceptor.LoginInterceptor" />
+
+			<interceptor-stack name="ttoInterceptorStack">
+				<interceptor-ref name="loginInterceptor" />
+				<interceptor-ref name="defaultStack" />
+			</interceptor-stack>
+		</interceptors>
+		<default-interceptor-ref name="ttoInterceptorStack" />
+		<global-results>
+			<result name="index">jsp/index.jsp</result>
+		</global-results>
+
+		<action name="index" class="com.edu.sse.action.LoginAction">
+			<result name="success">jsp/index.jsp</result>
+			<result name="login">jsp/index.jsp</result>
+		</action>
+
+		<action name="login" class="com.edu.sse.action.LoginAction">
+			<result name="loginSuccess" type="redirect">payment</result>
+			<result name="loginFailed">jsp/error.jsp</result>
+			<result name="success">jsp/index.jsp</result>
+			<result name="login">jsp/index.jsp</result>
+		</action>
+
+		<action name="payment" class="com.edu.sse.action.PaymentAction">
+			<result name="input">jsp/payment.jsp</result>
+		</action>
+
+		<action name="populateClass" class="com.edu.sse.action.PaymentAction" method="populateClass">
+			<result name="success" type="json" />
+		</action>
+
+
+	</package>
+
+</struts>
